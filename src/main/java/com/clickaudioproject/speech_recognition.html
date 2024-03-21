@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Speech Recognition Example</title>
+</head>
+<body>
+<h1>Speech Recognition Example</h1>
+<button onclick="startSpeechRecognition()">Start Speech Recognition</button>
+
+<script>
+    function startSpeechRecognition() {
+        const recognition = new webkitSpeechRecognition();
+        recognition.lang = 'en-US';
+        recognition.continuous = false;
+
+        recognition.onresult = function (event) {
+            const transcript = event.results[0][0].transcript;
+            console.log('Recognized:', transcript);
+            javaBridge.receiveRecognizedText(transcript); // Call Java method to pass recognized text
+        };
+
+        recognition.onerror = function (event) {
+            console.error('Speech recognition error:', event.error);
+        };
+
+        recognition.start();
+    }
+</script>
+</body>
+</html>
