@@ -9,6 +9,19 @@
     <version>1.0-SNAPSHOT</version>
     <name>ClickAudioProject</name>
 
+    <repositories>
+        <repository>
+            <id>snapshots-repo</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <junit.version>5.8.2</junit.version>
@@ -26,14 +39,27 @@
             <version>18</version>
         </dependency>
 
+        <dependency>
+            <groupId>edu.cmu.sphinx</groupId>
+            <artifactId>sphinx4-core</artifactId>
+            <version>5prealpha-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>edu.cmu.sphinx</groupId>
+            <artifactId>sphinx4-data</artifactId>
+            <version>5prealpha-SNAPSHOT</version>
+        </dependency>
+
 <!--        <dependency>-->
 <!--            <groupId>org.openjfx</groupId>-->
-<!--            <artifactId>javafx-web</artifactId>-->
+<!--            <artifactId>javafx-media</artifactId>-->
 <!--            <version>21.0.2</version>-->
-<!--            <scope>system</scope>-->
-<!--            <systemPath>C:\Users\jtaya\Desktop\CMPT 481\ClickAudioProject\javafx-sdk-21.0.2\lib\javafx.web.jar</systemPath>-->
 <!--        </dependency>-->
-
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-web</artifactId>
+            <version>21.0.2</version>
+        </dependency>
 
         <dependency>
             <groupId>org.junit.jupiter</groupId>
@@ -48,6 +74,8 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
+
 
     <build>
         <plugins>

@@ -1,6 +1,7 @@
 package com.clickaudioproject;
 
 import javafx.application.Application;
+import javafx.concurrent.Worker;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -16,6 +17,7 @@ import javafx.stage.Stage;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 
+import java.io.File;
 import java.util.ArrayList;
 
 
@@ -28,8 +30,8 @@ public class Main extends Application {
     private TextToSpeech textToSpeech = new TextToSpeech();
     private Text frequencyTitle = new Text("FREQUENCY LIST");
 
-//    WebView webView = new WebView();
-//    WebEngine webEngine = webView.getEngine();
+    WebView webView = new WebView();
+    WebEngine webEngine = webView.getEngine();
 
     @Override
     public void start(Stage primaryStage) {
@@ -71,8 +73,24 @@ public class Main extends Application {
             }
         }
 
-//        webEngine.load(getClass().getResource("/speech_recognition.html").toExternalForm());
+//        File f = new File("C:\\speech_to_text.html");
+//        webEngine.load(f.toURI().toString());
+//
+//        webEngine.executeScript("startSpeechToText()");
 
+        webEngine.loadContent("<html><body><script>" +
+                "function startSpeechToText() {" +
+                "   console.log('Speech to text started');" +
+                "}" +
+                "</script><button onclick='startSpeechToText()'>Start Speech to Text</button></body></html>");
+
+        // Wait for the web page to fully load
+        webEngine.getLoadWorker().stateProperty().addListener((obs, oldState, newState) -> {
+            if (newState == Worker.State.SUCCEEDED) {
+                // Execute the JavaScript function once the page is loaded
+                webEngine.executeScript("startSpeechToText()");
+            }
+        });
 //        // Create buttons for starting and stopping recognition
 //        Button startButton = new Button("Start Recognition");
 //        Button stopButton = new Button("Stop Recognition");
@@ -104,8 +122,11 @@ public class Main extends Application {
 
         window.getChildren().addAll(desktop, listDisplay);
 
+        VBox test = new VBox();
+        test.getChildren().add(webView);
 
-        Scene scene = new Scene(window, 1450, 750);
+        Scene scene = new Scene(test, 1450, 750);
+//        Scene scene = new Scene(window, 1450, 750);
 
         keyboardCalls(frequencyList.topFiveIcons,scene);
         primaryStage.setScene(scene);
@@ -123,18 +144,18 @@ public class Main extends Application {
     }
 
     private void keyboardCalls(ArrayList<Icon> topIcons, Scene scene) {
-            scene.setOnKeyPressed(event -> {
-                if (event.getCode() == KeyCode.DIGIT1) {
-                    textToSpeech.sayText(topIcons.get(0).getAppName());
-                } else if (event.getCode() == KeyCode.DIGIT2) {
-                    textToSpeech.sayText(topIcons.get(1).getAppName());
-                } else if (event.getCode() == KeyCode.DIGIT3) {
-                    textToSpeech.sayText(topIcons.get(2).getAppName());
-                } else if (event.getCode() == KeyCode.DIGIT4) {
-                    textToSpeech.sayText(topIcons.get(3).getAppName());
-                } else if (event.getCode() == KeyCode.DIGIT5) {
-                    textToSpeech.sayText(topIcons.get(4).getAppName());
-                }
+        scene.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.DIGIT1) {
+                textToSpeech.sayText(topIcons.get(0).getAppName());
+            } else if (event.getCode() == KeyCode.DIGIT2) {
+                textToSpeech.sayText(topIcons.get(1).getAppName());
+            } else if (event.getCode() == KeyCode.DIGIT3) {
+                textToSpeech.sayText(topIcons.get(2).getAppName());
+            } else if (event.getCode() == KeyCode.DIGIT4) {
+                textToSpeech.sayText(topIcons.get(3).getAppName());
+            } else if (event.getCode() == KeyCode.DIGIT5) {
+                textToSpeech.sayText(topIcons.get(4).getAppName());
+            }
         });
     }
 

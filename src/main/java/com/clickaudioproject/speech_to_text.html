@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Speech to Text</title>
+</head>
+<body>
+<h1> HELLO </h1>
+<textarea id="transcript" rows="4" cols="50"></textarea><br>
+<button onclick="startSpeechToText()">Start Speech Recognition</button>
+
+<script>
+  function startSpeechToText() {
+    var recognition = new webkitSpeechRecognition();
+    recognition.lang = 'en-US';
+    recognition.onresult = function(event) {
+      document.getElementById('transcript').value = event.results[0][0].transcript;
+    };
+    recognition.start();
+  }
+</script>
+</body>
+</html>
