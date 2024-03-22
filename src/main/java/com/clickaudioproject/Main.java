@@ -19,6 +19,7 @@ import javafx.scene.web.WebView;
 
 import java.io.File;
 import java.util.ArrayList;
+import netscape.javascript.JSObject;
 
 
 public class Main extends Application {
@@ -32,6 +33,8 @@ public class Main extends Application {
 
     WebView webView = new WebView();
     WebEngine webEngine = webView.getEngine();
+    JavaBridge bridge = new JavaBridge();
+
 
     @Override
     public void start(Stage primaryStage) {
@@ -73,24 +76,31 @@ public class Main extends Application {
             }
         }
 
-//        File f = new File("C:\\speech_to_text.html");
-//        webEngine.load(f.toURI().toString());
+        File f = new File("C:\\Users\\jtaya\\Desktop\\CMPT 481\\ClickAudioProject\\src\\main\\java\\com\\clickaudioproject\\speech_to_text.html");
+        webEngine.load(f.toURI().toString());
 //
 //        webEngine.executeScript("startSpeechToText()");
 
-        webEngine.loadContent("<html><body><script>" +
-                "function startSpeechToText() {" +
-                "   console.log('Speech to text started');" +
-                "}" +
-                "</script><button onclick='startSpeechToText()'>Start Speech to Text</button></body></html>");
+//        webEngine.loadContent("<html><body><script>" +
+//                "function startSpeechToText() {" +
+//                "       console.log('Speech to text started');" + // Corrected the console.log statement
+//
+//                "}" +
+//                "</script><textarea id='transcript'></textarea><button onclick='startSpeechToText()'>Start Speech to Text</button></body></html>");
 
         // Wait for the web page to fully load
-        webEngine.getLoadWorker().stateProperty().addListener((obs, oldState, newState) -> {
-            if (newState == Worker.State.SUCCEEDED) {
-                // Execute the JavaScript function once the page is loaded
-                webEngine.executeScript("startSpeechToText()");
-            }
+        webEngine.getLoadWorker().stateProperty().addListener((observable, oldValue, newValue) ->
+        {
+            JSObject window = (JSObject) webEngine.executeScript("window");
+            window.setMember("java", bridge);
+            webEngine.executeScript("console.log = function(message)\n" +
+                    "{\n" +
+                    "    java.log(message);\n" +
+                    "};");
+
+
         });
+
 //        // Create buttons for starting and stopping recognition
 //        Button startButton = new Button("Start Recognition");
 //        Button stopButton = new Button("Stop Recognition");
@@ -135,13 +145,13 @@ public class Main extends Application {
     }
 
     // Java class to be used as a bridge for communication between JavaFX and JavaScript
-    public class JavaBridge {
-        // Method to receive recognized text from JavaScript
-        public void receiveRecognizedText(String text) {
-            System.out.println("Recognized Text: " + text);
-            // Handle the recognized text in your JavaFX application
-        }
-    }
+//    public class JavaBridge {
+//        // Method to receive recognized text from JavaScript
+//        public void receiveRecognizedText(String text) {
+//            System.out.println("Recognized Text: " + text);
+//            // Handle the recognized text in your JavaFX application
+//        }
+//    }
 
     private void keyboardCalls(ArrayList<Icon> topIcons, Scene scene) {
         scene.setOnKeyPressed(event -> {

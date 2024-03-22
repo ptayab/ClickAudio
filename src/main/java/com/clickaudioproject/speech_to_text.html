@@ -6,18 +6,37 @@
   <title>Speech to Text</title>
 </head>
 <body>
-<h1> HELLO </h1>
+<h1>HELLO</h1>
 <textarea id="transcript" rows="4" cols="50"></textarea><br>
 <button onclick="startSpeechToText()">Start Speech Recognition</button>
+<button onclick="getStoredTranscript()">Say Recognition</button>
 
 <script>
+  // Variable to store transcript
+  var storedTranscript = '';
+
+  // Function to start speech recognition
   function startSpeechToText() {
     var recognition = new webkitSpeechRecognition();
     recognition.lang = 'en-US';
     recognition.onresult = function(event) {
-      document.getElementById('transcript').value = event.results[0][0].transcript;
+      var transcript = event.results[0][0].transcript;
+      document.getElementById('transcript').value = transcript;
+      storedTranscript = transcript; // Store transcript in the variable
+      alert('You said: ' + transcript);
+      // You can do further processing with the recognized text here
     };
     recognition.start();
+  }
+
+  // Function to access stored transcript
+  function getStoredTranscript() {
+    console.log(storedTranscript);
+
+  }
+
+  function test() {
+    console.log("SICJJCJC");
   }
 </script>
 </body>
