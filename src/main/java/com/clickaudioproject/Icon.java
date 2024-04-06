@@ -30,6 +30,7 @@ public class Icon {
     boolean isMouseOver;
     TextToSpeech textToSpeech;
     private PauseTransition hoverTransition;
+    private Stage appStage;
 
     public Icon(String newFileName, String newAppName, String newImagePath, TextToSpeech newTxtToSpeech) {
         iconWidth = 35;
@@ -41,6 +42,7 @@ public class Icon {
         frequencyCount = 0;
         textToSpeech = newTxtToSpeech;
         lowerName = appName.toLowerCase();
+        appStage = new Stage();
         if (appName.length() > 8) {
             shortName = appName.substring(0, 7);
         } else {
@@ -79,6 +81,9 @@ public class Icon {
 
     public int getFrequencyCount() {
         return frequencyCount;
+    }
+    public void setFrequencyCount(Integer newFrequencyCount) {
+        frequencyCount = newFrequencyCount;
     }
 
     public ImageView getImageView() {
@@ -133,9 +138,43 @@ public class Icon {
         });
     }
 
+    public void commandBoard(String firstWord, String words) {
+        String lowerAppName = appName.toLowerCase();
+
+        switch (firstWord.toLowerCase()) {
+            case "open":
+                if (lowerAppName .contains(words)) {
+                    frequencyCount++;
+                    openAppWindow();
+                    System.out.println("Opening...");
+                } else {
+                    System.out.println("File Name does not exist");
+                }
+                break;
+            case "close":
+                if (lowerAppName .contains(words)) {
+                    appStage.close();
+                    System.out.println("Opening...");
+                } else {
+                    System.out.println("File Name does not exist");
+                }
+                System.out.println("Closing...");
+                break;
+            case "remove":
+                // Do something when the command starts with "remove"
+                System.out.println("Removing...");
+                break;
+            default:
+                // Handle unrecognized commands
+                System.out.println("Unrecognized command.");
+                break;
+        }
+    }
+
+
+
     private void openAppWindow() {
-        // Create a new stage
-        Stage appStage = new Stage();
+
 
         // Create the root layout for the new window
         VBox root = new VBox();

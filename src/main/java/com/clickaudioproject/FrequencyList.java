@@ -84,6 +84,33 @@ public class FrequencyList {
         });
     }
 
+    public void frequencyCommandBoard(String firstWord, String words) {
+
+        firstWord.toLowerCase();
+        if(firstWord.equals("read")) {
+            for (Icon topIcon: topFiveIcons) {
+                textToSpeech.sayText(topIcon.getAppName());
+            }
+        } else if (firstWord.equals("reset")) {
+            for (Icon icon: icons) {
+                icon.setFrequencyCount(0);
+            }
+            topFiveIcons.clear();
+        } else if (firstWord.equals("delete")) {
+            for (Icon topIcon: topFiveIcons) {
+                String lowerAppName = topIcon.getAppName().toLowerCase();
+                    if (lowerAppName.contains(words)) {
+                        topIcon.setFrequencyCount(0);
+                        topFiveIcons.remove(topIcon);
+                    } else {
+                        System.out.println("File Name does not exist");
+                    }
+                    System.out.println("Removing...");
+            }
+        }
+    }
+
+
 
 
 

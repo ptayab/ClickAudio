@@ -6,6 +6,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
@@ -19,6 +20,8 @@ import javafx.scene.web.WebView;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
+
 import netscape.javascript.JSObject;
 
 
@@ -30,6 +33,7 @@ public class Main extends Application {
     private HBox listDisplay;
     private TextToSpeech textToSpeech = new TextToSpeech();
     private Text frequencyTitle = new Text("FREQUENCY LIST");
+    private String commandInput;
 
     WebView webView = new WebView();
     WebEngine webEngine = webView.getEngine();
@@ -79,14 +83,14 @@ public class Main extends Application {
         File f = new File("C:\\Users\\jtaya\\Desktop\\CMPT 481\\ClickAudioProject\\src\\main\\java\\com\\clickaudioproject\\speech_to_text.html");
         webEngine.load(f.toURI().toString());
 //
-//        webEngine.executeScript("startSpeechToText()");
 
-//        webEngine.loadContent("<html><body><script>" +
-//                "function startSpeechToText() {" +
-//                "       console.log('Speech to text started');" + // Corrected the console.log statement
-//
-//                "}" +
-//                "</script><textarea id='transcript'></textarea><button onclick='startSpeechToText()'>Start Speech to Text</button></body></html>");
+
+        webEngine.loadContent("<html><body><script>" +
+                "function startSpeechToText() {" +
+                "       console.log('Speech to text started');" + // Corrected the console.log statement
+
+                "}" +
+                "</script><textarea id='transcript'></textarea><button onclick='startSpeechToText()'>Start Speech to Text</button></body></html>");
 
         // Wait for the web page to fully load
         webEngine.getLoadWorker().stateProperty().addListener((observable, oldValue, newValue) ->
@@ -101,21 +105,46 @@ public class Main extends Application {
 
         });
 
-//        // Create buttons for starting and stopping recognition
-//        Button startButton = new Button("Start Recognition");
-//        Button stopButton = new Button("Stop Recognition");
-//
-//        // Set actions for the buttons
-//        startButton.setOnAction(event -> {
-//            webEngine.executeScript("startRecognition()");
-//        });
-//
-//        stopButton.setOnAction(event -> {
-//            webEngine.executeScript("stopRecognition()");
-//        });
+        // Voice Input
+        TextField commandField = new TextField();
+        commandField.setPromptText("Enter Command");
+        Button commandButton = new Button("Enter");
+        commandButton.setOnAction(event -> {
+            commandInput = commandField.getText();
+            System.out.println("Text entered: " + commandInput);
 
-        // Create a layout and add WebView and buttons
-//        VBox root = new VBox(webView, startButton, stopButton);
+            String command = firstWord(commandInput);
+            for (Icon icon: icons) {
+                icon.commandBoard(command, commandInput);
+            }
+
+            frequencyList.frequencyCommandBoard(command, commandInput);
+            displayFrequency();
+
+
+        });
+
+        Button SpeechRecognizerButton = new Button("Speech Recognition Window");
+        Stage secondaryStage = new Stage();
+        secondaryStage.setTitle("New Window");
+        StackPane secondaryLayout = new StackPane(webView, new Button("Close"));
+        secondaryLayout.setOnMouseClicked(e -> secondaryStage.close()); // Close window when clicked
+        secondaryStage.setScene(new Scene(secondaryLayout, 200, 100));
+        VBox test = new VBox();
+        test.getChildren().add(webView);
+        Scene recogScene = new Scene(test, 1000, 500);
+        secondaryStage.setScene(recogScene);
+
+        SpeechRecognizerButton.setOnAction(event -> {
+            secondaryStage.show();
+        });
+
+
+
+
+
+        HBox comandBox = new HBox();
+        comandBox.getChildren().addAll(commandField, commandButton, SpeechRecognizerButton);
 
         VBox window = new VBox();
         listDisplay.setBorder(new Border(new BorderStroke(
@@ -124,18 +153,14 @@ public class Main extends Application {
                 CornerRadii.EMPTY,
                 BorderWidths.DEFAULT)));
         window.addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
-            frequencyList.display();
-            listDisplay.getChildren().clear();
-            listDisplay.getChildren().addAll(frequencyList.display().getChildren());
-            listDisplay.getChildren().add(frequencyTitle);
+            displayFrequency();
         });
+        window.getChildren().add(comandBox);
 
         window.getChildren().addAll(desktop, listDisplay);
 
-        VBox test = new VBox();
-        test.getChildren().add(webView);
 
-        Scene scene = new Scene(test, 1450, 750);
+        Scene scene = new Scene(window, 1450, 750);
 //        Scene scene = new Scene(window, 1450, 750);
 
         keyboardCalls(frequencyList.topFiveIcons,scene);
@@ -144,6 +169,12 @@ public class Main extends Application {
 
     }
 
+    private void displayFrequency() {
+        frequencyList.display();
+        listDisplay.getChildren().clear();
+        listDisplay.getChildren().addAll(frequencyList.display().getChildren());
+        listDisplay.getChildren().add(frequencyTitle);
+    }
     // Java class to be used as a bridge for communication between JavaFX and JavaScript
 //    public class JavaBridge {
 //        // Method to receive recognized text from JavaScript
@@ -167,6 +198,21 @@ public class Main extends Application {
                 textToSpeech.sayText(topIcons.get(4).getAppName());
             }
         });
+    }
+
+    public String firstWord(String input) {
+        String[] words = input.split("\\s+");
+        String firstWord = words[0];
+        StringBuilder remainingWords = new StringBuilder();
+        for (int i = 1; i < words.length; i++) {
+            remainingWords.append(words[i]);
+            if (i < words.length - 1) {
+                remainingWords.append(" "); // Add space between words
+            }
+        }
+        commandInput = remainingWords.toString().toLowerCase();
+        System.out.println("Remaining words: " + commandInput);
+        return firstWord;
     }
 
 
