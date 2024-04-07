@@ -17,6 +17,10 @@ import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+
 
 import java.io.File;
 import java.util.ArrayList;
@@ -54,7 +58,7 @@ public class Main extends Application {
 
         // Create Icons and add them to icon ArrayList
         for (int i = 0; i < files.length; i++) {
-            String filePathImage = "file:src/main/java/com/clickaudioproject/images/" + files[i];
+            String filePathImage = "https://www.bing.com/search?pglt=41&q=web+speech+api&cvid=a47e8ef553cb4aad9f2d10602ab63e2d&gs_lcrp=EgZjaHJvbWUyBggAEEUYOTIGCAEQABhAMgYIAhAAGEAyBggDEAAYQDIGCAQQABhAMgYIBRAAGEAyBggGEAAYQDIGCAcQABhAMgYICBAAGEDSAQgyMzE5ajBqMagCB7ACAQ&FORM=ANSPA1&PC=LCTS" + files[i];
             Icon newIcon = new Icon(files[i], apps[i], filePathImage, textToSpeech);
             icons.add(newIcon);
         }
@@ -81,16 +85,9 @@ public class Main extends Application {
         }
 
         File f = new File("C:\\Users\\jtaya\\Desktop\\CMPT 481\\ClickAudioProject\\src\\main\\java\\com\\clickaudioproject\\speech_to_text.html");
-        webEngine.load(f.toURI().toString());
+//        webEngine.load(f.toURI().toString());
+        webEngine.load("https://www.google.com/search?q=google+web+speech+api&rlz=1C1CHBF_enCA956CA956&oq=google+web+speec&gs_lcrp=EgZjaHJvbWUqBwgAEAAYgAQyBwgAEAAYgAQyBggBEEUYOTIHCAIQABiABDIHCAMQABiABDIHCAQQABiABDIICAUQABgWGB4yCAgGEAAYFhgeMggIBxAAGBYYHjIICAgQABgWGB4yCAgJEAAYFhge0gEIMzA1OWowajSoAgCwAgA&sourceid=chrome&ie=UTF-8");
 //
-
-
-        webEngine.loadContent("<html><body><script>" +
-                "function startSpeechToText() {" +
-                "       console.log('Speech to text started');" + // Corrected the console.log statement
-
-                "}" +
-                "</script><textarea id='transcript'></textarea><button onclick='startSpeechToText()'>Start Speech to Text</button></body></html>");
 
         // Wait for the web page to fully load
         webEngine.getLoadWorker().stateProperty().addListener((observable, oldValue, newValue) ->
@@ -138,6 +135,7 @@ public class Main extends Application {
         SpeechRecognizerButton.setOnAction(event -> {
             secondaryStage.show();
         });
+
 
 
 

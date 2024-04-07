@@ -20,12 +20,20 @@
   function startSpeechToText() {
     console.log("startSpeechToText Function Called");
     var recognition = new webkitSpeechRecognition();
+    if ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window)
+    {
+      console.log("speech recognition API supported");
+    }
+    else
+    {
+      console.log("speech recognition API not supported")
+    }
     recognition.lang = 'en-US';
     recognition.onresult = function(event) {
       var transcript = event.results[0][0].transcript;
       document.getElementById('transcript').value = transcript;
       storedTranscript = transcript; // Store transcript in the variable
-      alert('You said: ' + transcript);
+      // alert('You said: ' + transcript);
       // You can do further processing with the recognized text here
     };
     recognition.start();
