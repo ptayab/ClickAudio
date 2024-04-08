@@ -84,6 +84,7 @@ public class FrequencyList {
         });
     }
 
+
     public void frequencyCommandBoard(String firstWord, String words) {
 
         firstWord.toLowerCase();

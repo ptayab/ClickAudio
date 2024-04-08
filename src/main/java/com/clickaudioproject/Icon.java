@@ -6,12 +6,15 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Icon {
     private double x, y;
@@ -173,7 +176,7 @@ public class Icon {
 
 
 
-    private void openAppWindow() {
+    public void openAppWindow() {
 
 
         // Create the root layout for the new window
@@ -191,10 +194,28 @@ public class Icon {
         // Create the scene for the new window
         Scene scene = new Scene(root, 600, 300);
 
+        AtomicBoolean isMouseInside = new AtomicBoolean(true);
+
+        // Add mouse event handlers to track mouse entering and exiting the window
+        scene.setOnMouseEntered(event -> {
+            isMouseInside.set(true);
+            textToSpeech.sayText("You are on the " + getAppName() + "window.   " + "Press the escape button to exit");
+        });
+        scene.setOnMouseExited(event -> isMouseInside.set(false));
+
+        // Add key event handler to the scene
+        scene.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ESCAPE && isMouseInside.get()) {
+                // Close the window only if the mouse is inside
+                appStage.close();
+            }
+        });
+
         // Set the scene on the new stage
         appStage.setScene(scene);
         appStage.setTitle(appName);
 
+        textToSpeech.sayText("Opening" + appName);
         // Show the new stage
         appStage.show();
     }

@@ -5,8 +5,8 @@ import com.sun.speech.freetts.VoiceManager;
 
 public class TextToSpeech {
     Voice voice;
-    private int voiceRate = 150;
-    private  int voicePitch = 120;
+    private int voiceRate = 140;
+    private  int voicePitch = 130;
     private  int voiceVolume = 100;
 
 
